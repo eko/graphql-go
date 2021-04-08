@@ -3,7 +3,7 @@ package common_test
 import (
 	"testing"
 
-	"github.com/graph-gophers/graphql-go/internal/common"
+	"github.com/graph-gophers/graphql-go/pkg/common"
 )
 
 type consumeTestCase struct {
@@ -94,21 +94,21 @@ func TestConsume(t *testing.T) {
 	}
 }
 
-var multilineStringTests = []consumeTestCase {
+var multilineStringTests = []consumeTestCase{
 	{
-		description: "Oneline strings are okay",
-		definition: `"Hello World"`,
-		expected: "",
-		failureExpected: false,
-		useStringDescriptions: true,		
+		description:           "Oneline strings are okay",
+		definition:            `"Hello World"`,
+		expected:              "",
+		failureExpected:       false,
+		useStringDescriptions: true,
 	},
 	{
 		description: "Multiline strings are not allowed",
 		definition: `"Hello
 				 World"`,
-		expected: `graphql: syntax error: literal not terminated (line 1, column 1)`,
-		failureExpected: true,
-		useStringDescriptions: true,		
+		expected:              `graphql: syntax error: literal not terminated (line 1, column 1)`,
+		failureExpected:       true,
+		useStringDescriptions: true,
 	},
 }
 
@@ -130,5 +130,5 @@ func TestMultilineString(t *testing.T) {
 				t.Fatalf("Test '%s' failed with error: '%s'", test.description, err.Error())
 			}
 		})
-	}	
+	}
 }

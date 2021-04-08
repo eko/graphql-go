@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/graph-gophers/graphql-go/errors"
-	"github.com/graph-gophers/graphql-go/internal/common"
 	"github.com/graph-gophers/graphql-go/internal/exec"
 	"github.com/graph-gophers/graphql-go/internal/exec/resolvable"
 	"github.com/graph-gophers/graphql-go/internal/exec/selected"
@@ -17,6 +16,7 @@ import (
 	"github.com/graph-gophers/graphql-go/internal/validation"
 	"github.com/graph-gophers/graphql-go/introspection"
 	"github.com/graph-gophers/graphql-go/log"
+	"github.com/graph-gophers/graphql-go/pkg/common"
 	"github.com/graph-gophers/graphql-go/trace"
 )
 

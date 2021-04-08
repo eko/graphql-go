@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/graph-gophers/graphql-go/errors"
-	"github.com/graph-gophers/graphql-go/internal/common"
 	"github.com/graph-gophers/graphql-go/internal/schema"
+	"github.com/graph-gophers/graphql-go/pkg/common"
 )
 
 type packer interface {

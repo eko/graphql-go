@@ -6,9 +6,9 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/graph-gophers/graphql-go/internal/common"
 	"github.com/graph-gophers/graphql-go/internal/exec/packer"
 	"github.com/graph-gophers/graphql-go/internal/schema"
+	"github.com/graph-gophers/graphql-go/pkg/common"
 )
 
 type Schema struct {
@@ -324,6 +324,10 @@ func (b *execBuilder) makeFieldExec(typeName string, f *schema.Field, m reflect.
 			if err != nil {
 				return nil, err
 			}
+			in = in[1:]
+		}
+
+		if len(f.Directives) > 0 && len(in) > 0 {
 			in = in[1:]
 		}
 

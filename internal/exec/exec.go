@@ -10,12 +10,12 @@ import (
 	"time"
 
 	"github.com/graph-gophers/graphql-go/errors"
-	"github.com/graph-gophers/graphql-go/internal/common"
 	"github.com/graph-gophers/graphql-go/internal/exec/resolvable"
 	"github.com/graph-gophers/graphql-go/internal/exec/selected"
 	"github.com/graph-gophers/graphql-go/internal/query"
 	"github.com/graph-gophers/graphql-go/internal/schema"
 	"github.com/graph-gophers/graphql-go/log"
+	"github.com/graph-gophers/graphql-go/pkg/common"
 	"github.com/graph-gophers/graphql-go/trace"
 )
 
@@ -206,6 +206,9 @@ func execFieldSelection(ctx context.Context, r *Request, s *resolvable.Schema, f
 			}
 			if f.field.ArgsPacker != nil {
 				in = append(in, f.field.PackedArgs)
+			}
+			if f.field.Directives != nil {
+				in = append(in, reflect.ValueOf(f.field.Directives))
 			}
 			callOut := res.Method(f.field.MethodIndex).Call(in)
 			result = callOut[0]

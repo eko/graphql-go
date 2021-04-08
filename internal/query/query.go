@@ -5,7 +5,7 @@ import (
 	"text/scanner"
 
 	"github.com/graph-gophers/graphql-go/errors"
-	"github.com/graph-gophers/graphql-go/internal/common"
+	"github.com/graph-gophers/graphql-go/pkg/common"
 )
 
 type Document struct {

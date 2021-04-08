@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/graph-gophers/graphql-go/errors"
-	"github.com/graph-gophers/graphql-go/internal/common"
+	"github.com/graph-gophers/graphql-go/pkg/common"
 )
 
 func TestParseInterfaceDef(t *testing.T) {

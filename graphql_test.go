@@ -11,6 +11,7 @@ import (
 	gqlerrors "github.com/graph-gophers/graphql-go/errors"
 	"github.com/graph-gophers/graphql-go/example/starwars"
 	"github.com/graph-gophers/graphql-go/gqltesting"
+	"github.com/graph-gophers/graphql-go/pkg/common"
 )
 
 type helloWorldResolver1 struct{}
@@ -43,6 +44,31 @@ func (r *helloSnakeResolver2) HelloHTML(ctx context.Context) (string, error) {
 
 func (r *helloSnakeResolver2) SayHello(ctx context.Context, args struct{ FullName string }) (string, error) {
 	return "Hello " + args.FullName + "!", nil
+}
+
+type customDirectiveResolver struct{}
+
+func (r *customDirectiveResolver) MyTestQuery(ctx context.Context, directives common.DirectiveList) string {
+	customDirective := directives.Get("customDirective")
+	customAttribute, _ := customDirective.Args.Get("customAttribute")
+
+	return fmt.Sprintf(
+		"Hello custom directive '%s' with attribute value '%s'!",
+		customDirective.Name.Name,
+		customAttribute.String(),
+	)
+}
+
+func (r *customDirectiveResolver) MyTestQueryWithArgs(ctx context.Context, args struct{ Arg1 string }, directives common.DirectiveList) string {
+	customDirective := directives.Get("customDirective")
+	customAttribute, _ := customDirective.Args.Get("customAttribute")
+
+	return fmt.Sprintf(
+		"Hello with arg1 '%s' custom directive '%s' with attribute value '%s'!",
+		args.Arg1,
+		customDirective.Name.Name,
+		customAttribute.String(),
+	)
 }
 
 type theNumberResolver struct {
@@ -207,6 +233,63 @@ func TestHelloWorld(t *testing.T) {
 			ExpectedResult: `
 				{
 					"hello": "Hello world!"
+				}
+			`,
+		},
+	})
+}
+
+func TestCustomDirective(t *testing.T) {
+	t.Parallel()
+
+	gqltesting.RunTests(t, []*gqltesting.Test{
+		{
+			Schema: graphql.MustParseSchema(`
+				directive @customDirective(
+					customAttribute: String!
+			    ) on FIELD_DEFINITION
+
+				schema {
+					query: Query
+				}
+
+				type Query {
+					myTestQuery: String! @customDirective(customAttribute: hi)
+				}
+			`, &customDirectiveResolver{}),
+			Query: `
+				{
+					myTestQuery
+				}
+			`,
+			ExpectedResult: `
+				{
+					"myTestQuery": "Hello custom directive 'customDirective' with attribute value 'hi'!"
+				}
+			`,
+		},
+		{
+			Schema: graphql.MustParseSchema(`
+				directive @customDirective(
+					customAttribute: String!
+			    ) on FIELD_DEFINITION
+
+				schema {
+					query: Query
+				}
+
+				type Query {
+					myTestQueryWithArgs(arg1: String!): String! @customDirective(customAttribute: hi)
+				}
+			`, &customDirectiveResolver{}),
+			Query: `
+				{
+					myTestQueryWithArgs(arg1: "world")
+				}
+			`,
+			ExpectedResult: `
+				{
+					"myTestQueryWithArgs": "Hello with arg1 'world' custom directive 'customDirective' with attribute value 'hi'!"
 				}
 			`,
 		},
